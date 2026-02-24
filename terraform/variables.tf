@@ -7,5 +7,5 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  default = "jenkins"
+  default = "jenkins-mum"
 }
