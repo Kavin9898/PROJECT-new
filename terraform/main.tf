@@ -108,6 +108,12 @@ sudo apt update -y
 sudo apt install nginx -y
 sudo systemctl start nginx
 sudo systemctl enable nginx
+cd /var/www/html
+rm -rf *
+
+git clone https://github.com/Kavin9898/PROJECT-new.git
+mv temp/* .
+rm -rf temp
 EOF
 
   tags = {
