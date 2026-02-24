@@ -111,7 +111,7 @@ sudo systemctl enable nginx
 cd /var/www/html
 rm -rf *
 
-git clone https://github.com/Kavin9898/PROJECT-new.git
+git clone https://github.com/Kavin9898/PROJECT-new.git temp
 mv temp/* .
 rm -rf temp
 EOF
