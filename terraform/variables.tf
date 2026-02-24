@@ -1,5 +1,5 @@
 variable "region" {
-  default = "ap-southeast-2"
+  default = "ap-south-1"
 }
 
 variable "instance_type" {
