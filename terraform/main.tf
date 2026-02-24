@@ -104,7 +104,6 @@ sudo apt update -y
 sudo apt install nginx -y
 sudo systemctl start nginx
 sudo systemctl enable nginx
-echo "<h1>Terraform + Nginx Deployment Success 🚀</h1>" > /var/www/html/index.html
 EOF
 
   tags = {
