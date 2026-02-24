@@ -7,7 +7,7 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
@@ -15,25 +15,33 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                dir('terraform') {
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                sh 'terraform validate'
+                dir('terraform') {
+                    sh 'terraform validate'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                dir('terraform') {
+                    sh 'terraform plan'
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                dir('terraform') {
+                    sh 'terraform apply -auto-approve'
+                }
             }
         }
     }
