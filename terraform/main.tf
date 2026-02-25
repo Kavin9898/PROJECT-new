@@ -13,8 +13,7 @@ provider "aws" {
 
 data "aws_ami" "ubuntu" {
   most_recent = true
-
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
 
   filter {
     name   = "name"
@@ -95,25 +94,62 @@ resource "aws_security_group" "instance_sg" {
 resource "aws_instance" "my_instance" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
+  key_name      = var.key_name
 
   subnet_id              = aws_subnet.instance_subnet.id
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
-
   associate_public_ip_address = true
-  key_name = var.key_name
 
   user_data = <<-EOF
 #!/bin/bash
-sudo apt update -y
-sudo apt install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
-cd /var/www/html
-rm -rf *
 
-git clone https://github.com/Kavin9898/PROJECT-new.git temp
-mv temp/* .
-rm -rf temp
+# Update system
+apt update -y
+
+# Install required packages
+apt install -y nginx git curl
+
+# Install Node.js (LTS)
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+apt install -y nodejs
+
+# Install PM2
+npm install -g pm2
+
+# Clone project
+cd /home/ubuntu
+git clone https://github.com/Kavin9898/PROJECT-new.git
+cd PROJECT-new/backend
+
+# Install backend dependencies
+npm install
+
+# Start backend with PM2
+pm2 start server.js
+pm2 startup systemd
+pm2 save
+
+# Configure Nginx reverse proxy
+cat > /etc/nginx/sites-available/default << 'EOL'
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_cache_bypass \$http_upgrade;
+    }
+}
+EOL
+
+# Restart Nginx
+systemctl restart nginx
+systemctl enable nginx
+
 EOF
 
   tags = {
