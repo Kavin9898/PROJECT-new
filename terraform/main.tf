@@ -101,35 +101,35 @@ resource "aws_instance" "my_instance" {
   associate_public_ip_address = true
 
   user_data = <<-EOF
-#!/bin/bash
+!/bin/bash
 
-# Update system
+ Update system
 apt update -y
 
-# Install required packages
+ Install required packages
 apt install -y nginx git curl
 
-# Install Node.js (LTS)
+Install Node.js (LTS)
 curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 apt install -y nodejs
 
-# Install PM2
+Install PM2
 npm install -g pm2
 
-# Clone project
+ Clone project
 cd /home/ubuntu
 git clone https://github.com/Kavin9898/PROJECT-new.git
 cd PROJECT-new/backend
 
-# Install backend dependencies
+Install backend dependencies
 npm install
 
-# Start backend with PM2
+ Start backend with PM2
 pm2 start server.js
 pm2 startup systemd
 pm2 save
 
-# Configure Nginx reverse proxy
+ Configure Nginx reverse proxy
 cat > /etc/nginx/sites-available/default << 'EOL'
 server {
     listen 80;
@@ -146,7 +146,7 @@ server {
 }
 EOL
 
-# Restart Nginx
+ Restart Nginx
 systemctl restart nginx
 systemctl enable nginx
 
